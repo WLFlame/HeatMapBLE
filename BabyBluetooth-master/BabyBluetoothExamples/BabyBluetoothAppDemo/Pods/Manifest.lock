@@ -1,0 +1,21 @@
+PODS:
+  - AVOSCloud (3.3.5)
+  - MJExtension (3.0.13)
+  - RMActionController (1.0.5)
+  - RMDateSelectionViewController (2.0.3):
+    - RMActionController (~> 1.0.5)
+
+DEPENDENCIES:
+  - AVOSCloud
+  - MJExtension
+  - RMDateSelectionViewController (~> 2.0.3)
+
+SPEC CHECKSUMS:
+  AVOSCloud: 1fe170768bee7e05bc3ea86e38d5bddb105cb957
+  MJExtension: 5932755f451458eefa24239358817f8d291240c7
+  RMActionController: b83653e7452ed51492094d65dc82151c36443c03
+  RMDateSelectionViewController: 354a0f1fe40bac01054528b7a8735f2973bbd813
+
+PODFILE CHECKSUM: 27fe1809597fe2d631223a83322cfaf48968cf17
+
+COCOAPODS: 1.0.1
