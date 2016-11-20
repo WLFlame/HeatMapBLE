@@ -95,7 +95,7 @@
 
 - (CGFloat)convertNMEA:(NSString *)value
 {
-    // abc+(de/60)+(fghi/600000)
+    // abc+(de/60)+(fghi/60000)
     NSString *abc = @"0";
     NSString *de = @"0";
     NSString *fghi = @"0";
@@ -119,7 +119,7 @@
     NSDecimalNumber *deDecimal = [[NSDecimalNumber alloc] initWithString:de];
     NSDecimalNumber *fghiDeciaml = [[NSDecimalNumber alloc] initWithString:fghi];
     
-    NSDecimalNumber *resualtDecimal = [[abcDecimal decimalNumberByAdding:[deDecimal decimalNumberByDividingBy:[[NSDecimalNumber alloc] initWithString:@"60"]]] decimalNumberByAdding:[fghiDeciaml decimalNumberByDividingBy:[[NSDecimalNumber alloc] initWithString:@"600000"]]];
+    NSDecimalNumber *resualtDecimal = [[abcDecimal decimalNumberByAdding:[deDecimal decimalNumberByDividingBy:[[NSDecimalNumber alloc] initWithString:@"60"]]] decimalNumberByAdding:[fghiDeciaml decimalNumberByDividingBy:[[NSDecimalNumber alloc] initWithString:@"3600"]]];
     // 保留小数点后6位
    
     return [[resualtDecimal roundToScale:6] doubleValue];

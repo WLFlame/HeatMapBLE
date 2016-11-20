@@ -17,6 +17,8 @@
 #import "MBProgressHUD+Add.h"
 #import "MapViewModelController.h"
 #import "MBProgressHUD.h"
+#import <AVOSCloud/AVOSCloud.h>
+#import "SVProgressHUD.h"
 @interface HeatMapViewController () <MKMapViewDelegate>
 @property (nonatomic, strong) MKMapView *mapView;
 @property (nonatomic, strong) UIImageView *heatImageView;
@@ -32,6 +34,10 @@
 @property (nonatomic, strong) NSDate *endDate;
 // 缩放系数
 @property (nonatomic, assign) CGFloat zoomRadio;
+
+@property (nonatomic, copy) NSString *pointStr1;
+@property (nonatomic, copy) NSString *pointStr2;
+
 
 @end
 
@@ -60,12 +66,36 @@
     
 }
 
+- (void)upload
+{
+    AVFile *file = [AVFile fileWithData:[self.pointStr1 dataUsingEncoding:NSUTF8StringEncoding]];
+    [file saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (succeeded) {
+            [SVProgressHUD showSuccessWithStatus:@"上传数据成功"];
+        } else {
+            [SVProgressHUD showErrorWithStatus:@"上传数据失败"];
+            
+        }
+    }];
+    AVFile *file2 = [AVFile fileWithData:[self.pointStr2 dataUsingEncoding:NSUTF8StringEncoding]];
+    [file2 saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        //        if (succeeded) {
+        //            [SVProgressHUD showSuccessWithStatus:@"上传数据成功"];
+        //        } else {
+        //            [SVProgressHUD showErrorWithStatus:@"上传数据失败"];
+        //
+        //        }
+    }];
+
+}
+
 - (void)configureUI
 {
     UIBarButtonItem *start = [[UIBarButtonItem alloc] initWithTitle:@"开始" style:UIBarButtonItemStylePlain target:self action:@selector(choseStart)];
     UIBarButtonItem *end = [[UIBarButtonItem alloc] initWithTitle:@"结束" style:UIBarButtonItemStylePlain target:self action:@selector(choseEnd)];
+    UIBarButtonItem *upload = [[UIBarButtonItem alloc] initWithTitle:@"上传" style:UIBarButtonItemStylePlain target:self action:@selector(upload)];
     UIBarButtonItem *viewModel = [[UIBarButtonItem alloc] initWithTitle:@"查看" style:UIBarButtonItemStylePlain target:self action:@selector(viewModel)];
-    self.navigationItem.rightBarButtonItems = @[end,start,viewModel ];
+    self.navigationItem.rightBarButtonItems = @[end,start,viewModel,upload ];
     
 //    UIStepper *stepper = [[UIStepper alloc] init];
 //    self.navigationItem.titleView = stepper;
@@ -201,7 +231,9 @@
     BOOL filterWithDate = self.startDate && self.endDate;
     
     self.tempModels = [NSMutableArray array];
-    
+    NSMutableString *pointStr = [NSMutableString string];
+    NSMutableString *locStr = [NSMutableString string];
+    NSInteger index = 0;
     for (CoordinateDataModel *model in self.models) {
         if (model.latitude < 30 || model.longitude < 100) {
             continue;
@@ -215,6 +247,9 @@
         }
         
         [self.tempModels addObject:model];
+        [pointStr appendString:[NSString stringWithFormat:@"point%zd,%f,%f,%@,%@,%@\n",index, model.latitude, model.longitude, model.orignalLatitude,model.orignalLongitude, model.originalValue]];
+        [locStr appendString:[NSString stringWithFormat:@"%f,%f\n", model.latitude,model.longitude]];
+        
         CLLocation *location = [[CLLocation alloc] initWithLatitude:model.latitude longitude:model.longitude];
         NSLog(@"createDate %@ latitude %f longitude %f",model.createDate,  location.coordinate.latitude, location.coordinate.longitude);
         NSLog(@"%@", model.originalValue);
@@ -224,8 +259,6 @@
         
         if (model.latitude > maxLa) {
             maxLa = model.latitude;
-            
-            
         }
         
         if (model.latitude < minLa ) {
@@ -239,12 +272,13 @@
         if (model.longitude < minLo) {
             minLo = model.longitude;
         }
+        index++;
     }
     
     //    CGPoint topLeftP = CGPointMake(<#CGFloat x#>, <#CGFloat y#>)
-    
-    
-//    NSLog(@"max %f min %f", maxLa - minLa, maxLo - minLo);
+    self.pointStr1 = pointStr;
+    self.pointStr2 = locStr;
+  //    NSLog(@"max %f min %f", maxLa - minLa, maxLo - minLo);
     self.deltaLa = maxLa - minLa;
     self.deltaLo = maxLo - minLo;
     

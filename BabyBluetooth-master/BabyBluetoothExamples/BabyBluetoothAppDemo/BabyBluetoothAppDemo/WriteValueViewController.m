@@ -255,6 +255,11 @@
                         }
                         NSLog(@"new value %@",characteristics.value);
                         //                            NSString *string = [[NSString alloc] initWithData:characteristics.value encoding:NSASCIIStringEncoding];
+                        if (weak_self.dataSource.count < 2047) {
+                             [SVProgressHUD showProgress:weak_self.dataSource.count / 2047.0f status:[NSString stringWithFormat:@"正在读取 %.2f %@", weak_self.dataSource.count / 2047.0f * 100, @"%"]];
+                        }
+                       
+                        
                         [weak_self insertValueToTextView:[NSString stringWithFormat:@"%@", characteristics.value]];
                     }];
         //        }
@@ -460,6 +465,7 @@
         
         
         if (self.dataSource.count == 2047) {
+            [SVProgressHUD dismiss];
             self.isContinous = NO;
             self.isChained = NO;
             NSString *documentPath =  NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).lastObject;
@@ -477,7 +483,7 @@
             self.btnGenerateMap.enabled = YES;
             [self analysisDataSource];
             self.navigationItem.rightBarButtonItem.enabled = YES;
-             [SVProgressHUD showInfoWithStatus:@"2048个包已传输完成，开始校对"];
+             [SVProgressHUD showInfoWithStatus:@"已传输完成，开始校对"];
             __weak typeof(self) weak_self = self;
             dispatch_async(dispatch_get_global_queue(0, 0), ^{
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -568,14 +574,14 @@
     __weak typeof(self) weak_self = self;
     if (array.count > 0 && self.readIndexPoint == nil) {
         
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"是否使用上次的数据" message:@"" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"是否使用上次数据" message:@"" preferredStyle:UIAlertControllerStyleAlert];
         
-        [alert addAction:[UIAlertAction actionWithTitle:@"使用" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [alert addAction:[UIAlertAction actionWithTitle:@"是" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             [weak_self.dataSource addObjectsFromArray:array];
              [weak_self analysisDataSource];
         }]];
         
-        [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        [alert addAction:[UIAlertAction actionWithTitle:@"否" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
            
             weak_self.btnGenerateMap.enabled = NO;
             // 获取位置指针

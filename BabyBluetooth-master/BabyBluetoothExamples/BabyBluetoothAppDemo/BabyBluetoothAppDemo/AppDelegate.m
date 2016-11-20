@@ -28,7 +28,7 @@
     // 如果使用美国站点，请加上下面这行代码：
     // [AVOSCloud setServiceRegion:AVServiceRegionUS];
 //    3f100b0f072816d80bec1ba428d2020a0003ff
-    CoordinateDataModel *m = [[CoordinateDataModel alloc] initWithString:@"3f100b0f07272ad80be71ba428bd030a00fdff"];
+    CoordinateDataModel *m = [[CoordinateDataModel alloc] initWithString:@"3f100b1008243ad80bec1ba428e403120040ff"];
 //    CoordinateDataModel *m2 = [[CoordinateDataModel alloc] initWithString:@"3f100b0f072820d80bfb1ba428ab020700f2ff"];
 //    CoordinateDataModel *m3 = [[CoordinateDataModel alloc] initWithString:@"3f100b0f07282ad80bf11ba42871020600b7ff"];
 //    CoordinateDataModel *m4 = [[CoordinateDataModel alloc] initWithString:@"3f100b0f072834d80b091ca42849020a00b6ff"];
